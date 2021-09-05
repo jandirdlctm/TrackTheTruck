@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trucker Mile Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://allyoucan.cloud/cdn/icofont/1.0.1/icofont.css" integrity="sha384-jbCTJB16Q17718YM9U22iJkhuGbS0Gd2LjaWb4YJEZToOPmnKDjySVa323U+W7Fv" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/icons/icofont/icofont.css">
+    <link rel="stylesheet" href="style.css"/>
+  </head>
+  <body>
+    <div id="vue-app-wrapper">
+      <!--! LANDING PAGE-->
+      <div
+        class="display-flex-col-align-center"
+        v-if="page=='landingContainer'"
+      >
+        <h1 class="app-name-header-one">TRACK THE TRUCK</h1>
+        <i class="icofont-truck"></i>
+        <i class="fa fa-road fa-lg"></i>
+        <p class="subscript-yellow">Keeping Track of Miles for You</p>
+        <button
+          type="button"
+          class="input-button"
+          id="redirect-form-login"
+          v-on:click="changePageDisplay('signIn'), clearLogInInputs() "
+        >
+          <a>Sign In</a>
+        </button>
+        <button
+          type="button"
+          class="input-button"
+          id="redirect-form-signUp"
+          v-on:click="changePageDisplay('signUpCompany'), type_role=`company`, clearSignUpButtonInputs()"
+        >
+          Sign Up
+        </button>
+      </div>
+
+      <!--! SIGN UP / LOGIN FORMs-->
+      <div class="container">
+        <div class="form-container">
+          <!--*login form-->
+          <div class="form" v-if="page=='signIn'">
+            <!--action="POST"-->
+            <span class="display-flex-space-between">
+              <button class="back-button" v-on:click="changePageDisplay('landingContainer')">Back</button>
+              <h2 class="form-title">Login</h2>
+            </span>
+
+            <div class="form-message form-message-error"></div>
+            <!--* error message-->
+
+            <!-- DISPLAYING THE FIELDS THAT NEED TO BE DISPLAYED: VALIDATION -->
+            <div class="logInErrors">
+              <ul>
+                <li v-for="error in logInUserErrors">{{error}}</li>
+              </ul>
+            </div>
+
+            <!-- EMAIL INPUT FIELD-->
+            <div class="form-input-group">
+              <input
+                type="text"
+                v-model="logInEmail"
+                class="form-input"
+                placeholder="Email"
+                autofocus
+              />
+              <div class="form-input-error-message"></div>
+            </div>
+
+            <!-- PASSWORD input field-->
+            <div class="form-input-group">
+              <input
+                type="password"
+                v-model="logInPassword"
+                class="form-input"
+                placeholder="Password"
+              />
+              <div class="form-input-error-message"></div>
+            </div>
+
+            <!--submit and links-->
+            <button type="submit" v-on:click="logInUser" class="form-button">
+              Continue
+            </button>
+            <p class="form-text">
+              <a href="#" class="form-link">Forgot your password?</a>
+            </p>
+            <p class="form-text">
+              <a
+                href="#"
+                id="linkCreateAccount"
+                class="form-link"
+                v-on:click="changePageDisplay('signUpCompany')"
+                >Dont have an account? Sign up here</a
+              >
+            </p>
+          </div>
+
+          <!--*create account COMPANY form-->
+          <div class="form" v-if="page=='signUpCompany'">
+
+            
+          </div>
+
+          <!--*create account COMPANY form-->
+          <div class="form" v-if="page=='signUpCompany'">
+            <span class="display-flex-space-between">
+              <button class="back-button" v-on:click="changePageDisplay('landingContainer')">Back</button>
+              <h2 class="form-title">Create Account</h2>
+              
+            </span>
+
+            <!-- DIV TO DISPLAY ERRORS IF COMPANY DONT FILL ALL THEM OUT -->
+            <div
+              v-if="signUpCompanyErrors.length > 0"
+              class="sign-up-company-errors-wrapper"
+            >
+              <ul>
+                <li v-for="error in signUpCompanyErrors">{{error}}</li>
+              </ul>
+            </div>
+
+            <!-- EMAIL INPUT FIELD-->
+            <div class="form-input-group">
+              <input
+                type="text"
+                class="form-input"
+                placeholder="Email"
+                autofocus
+                v-model="new_company_email"
+              />
+            </div>
+
+            <div class="form-input-group">
+              <input
+                type="text"
+                class="form-input"
+                placeholder="Company Name"
+                v-model="new_company_name"
+              />
+            </div>
+
+            <!-- PASSWORD input field-->
+            <div class="form-input-group">
+              <input
+                type="password"
+                class="form-input"
+                placeholder="Password"
+                v-model="new_company_password"
+              />
+            </div>
+
+            <!--confirm password field-->
+            <div class="form-input-group">
+              <input
+                type="password"
+                class="form-input"
+                placeholder="Confirm Password"
+                v-model="new_company_confirm_password"
+              />
+            </div>
+
+            <!--submit and links-->
+            <button class="form-button" v-on:click="addNewUser">
+              Continue
+            </button>
+            <p class="form-text">
+              <a
+                href="#"
+                class="form-link"
+                v-on:click="changePageDisplay('signIn')"
+                >Already Have an Account? Sign In Here</a
+              >
+            </p>
+          </div>
+        </div>
+
+        <!--* ADMIN PAGE---------------------------------------------------------------------------------------------------------------------------->
+        <!--! ADMIN LANDING success on login/signup-->
+        <div v-if="page=='adminLanding'" class="display-flex-col-align-center">
+          <h2>
+            Welcome {{currentUser.company.company_name}}
+          </h2>
+
+          <button class="input-button" v-on:click="goToDisplayAllDrivers">
+            All Drivers
+          </button>
+          <button
+            class="input-button"
+            v-on:click="changePageDisplay('addDriver', type_role='user')"
+          >
+            Add New Driver
+          </button>
+          <button v-on:click="logOut" class="logout-button">logout<i class="icofont-logout icofont-1x"></i></button>
+        </div>
+
+        <!--! ALL Drivers-->
+        <div v-if="page=='allDrivers'">
+          <span class="display-flex-space-between">
+            <button class="back-button" v-on:click="changePageDisplay('adminLanding')">Back</button>
+            <h1 class="form-title">All Drivers</h1>
+          </span>
+          
+
+          <div id="all-drivers-wrapper" class="display-flex-col-align-center">
+            <ul>
+              <li v-for="driver in drivers" v-on:click="goToDriver(driver)">
+                <div  class="driver-card">
+                  <span>{{driver.first_name}} {{driver.last_name}} <i class="icofont-plus icofont-1x"></i></span>
+                  <span class="subscript-gray" class="driver-id-display">
+                    {{ "_" + driver._id.slice(driver._id.length - 5) }}
+                  </span>
+                </div>
+                  
+              </li>
+            </ul>
+          </div>
+        </div>
+
+
+        <!-- ANCHOR -->
+        <div v-if="page=='oneDriver'">
+          <span class="display-flex-space-between">
+            <button class="back-button" v-on:click="changePageDisplay('adminLanding')">Back</button>
+            <h3 class="form-title">Routes of {{currentDriver.first_name}} {{currentDriver.last_name}}</h3>  
+          </span>
+          
+          <div v-if="driverRoutes.length == 0" class="no-routes">
+            <h2 style="text-align: center; margin:20px;">This Driver Has No Routes</h2>
+          </div>
+          <div class="search-group">
+            <button class="search-group-button" v-on:click="filterBy='Month', filterByDate">30 Days</button>
+            <button class="search-group-button" v-on:click="filterBy='Week', filterByDate">7 Days </button>
+            <button class="search-group-button" v-on:click="filterBy='Day', filterByDate">24 Hours</button>
+          </div>
+          
+          <div class="search-group-by-date">
+            <input type = "date" v-model = "filterDateStart">
+            <input type = "date" v-model = "filterDateEnd">
+          </div>
+          <div class="display-flex-col-align-center">
+            <button class="search-button" v-on:click= "filterBy = 'custom', filterByDate">Search</button>
+            <button class="reset-search-button" v-on:click="filterBy=''">Reset Search</button>
+          </div>
+          <div class="all-routes-of-driver all-routes-wrapper" >
+            <ul>
+              <li v-show="filterBy.length==0" v-for="route in driverRoutes">
+                
+                <span class="display-flex-space-between">
+                  <h3>{{route.from_location}}</h3>
+                  <h3>{{route.start_mileage}}mi</h3>
+                </span>
+                <i class="icofont-arrow-down icofont-2x"></i>
+                <span class="display-flex-space-between">
+                  <h3>{{route.to_location}}</h3> 
+                  <h3>{{route.end_mileage}}mi</h3>
+                </span>
+                <h2 style="text-align: center; margin:10px;">Total Miles {{route.total_miles}}<br></h2>
+                <p style="text-align: right; color:#008cff;" >Finished - {{route.time_ago}}<br></p>
+                <h5 style="text-align: left; color:#4bb544; margin-top:10px;">Route ID: {{route._id}}</h5> 
+              </li>
+            </ul>
+          </div>
+          <div class="all-routes-wrapper" v-if="filterBy.length!=0">
+            <ul>
+              <li v-for="route in filteredRoutes">
+                <span class="display-flex-space-between">
+                  <h3>{{route.from_location}}</h3> 
+                  <h3>{{route.start_mileage}}<br></h3>
+                </span>
+                <i class="icofont-arrow-down icofont-2x"></i>
+                <span class="display-flex-space-between">
+                  <h3>{{route.to_location}}</h3> 
+                  <h3> {{route.end_mileage}}<br></h3>
+                </span>
+                <h2 style="text-align: center; margin:10px;">Total Miles {{route.total_miles}}<br></h2>
+                <p style="text-align: right; color:#008cff;" >Finished - {{route.time_ago}}<br></p>
+                <h5 style="text-align: left; color:#4bb544; margin-top:10px;">Route ID: {{route._id}}</h5> 
+              </li>
+            </ul>
+            </div>
+          </div>
+        </div>
+
+
+
+        <!--! NEW DRIVER FORM FOR ADMINS-->
+        <div class="form-container" v-if="page=='addDriver'">
+          <!--*create account USER form-->
+          <div class="form">
+            <span class="form-menu-selection">
+              <button
+                class="cancel-button"
+                v-on:click="changePageDisplay('adminLanding')"
+              >
+                Cancel
+              </button>
+              <h2 class="form-title">New Driver</h2>
+            </span>
+
+            
+            <div class="form-message form-message-error"></div>
+            <!--* error message-->
+            <!-- DIV TO DISPLAY ERRORS IF USER DOESN'T FILL ALL THEM OUT -->
+
+            <div
+              v-if="signUpUserErrors.length > 0"
+              class="sign-up-user-errors-wrapper"
+            >
+              <ul>
+                <li v-for="error in signUpUserErrors">{{error}}</li>
+              </ul>
+            </div>
+
+            <!-- EMAIL INPUT FIELD-->
+            <div class="form-input-group">
+              <input
+                type="text"
+                class="form-input"
+                placeholder="Email"
+                v-model="email"
+                autofocus
+              />
+            </div>
+
+            <div class="form-input-group">
+              <input
+                type="text"
+                class="form-input"
+                placeholder="First Name"
+                v-model="first_name"
+              />
+              <div class="form-input-error-message"></div>
+            </div>
+
+            <div class="form-input-group">
+              <input
+                type="text"
+                class="form-input"
+                placeholder="Last Name"
+                v-model="last_name"
+              />
+              <div class="form-input-error-message"></div>
+            </div>
+
+            <div class="form-input-group">
+              <input
+                type="text"
+                class="form-input"
+                placeholder="password"
+                v-model="password"
+              />
+              <div class="form-input-error-message"></div>
+            </div>
+
+            <div class="form-input-group">
+              <input
+                type="text"
+                class="form-input"
+                placeholder="confirm password"
+                v-model="confirm_password"
+              />
+              <p class="subscript-gray">Give this password to your driver</p>
+            </div>
+
+            <!--submit and links-->
+            <button class="form-button" v-on:click="addNewUser">
+              Continue
+            </button>
+          </div>
+        </div>
+
+        <!--* DRIVER PAGE---------------------------------------------------------------------------------------------------------------------------->
+        <!--! DRIVER LANDING success on login-->
+        <div
+          v-if="page=='driverLanding'"
+          class="display-flex-col-align-center"
+        >
+          <h2>
+            Welcome Driver {{currentUser.first_name}}
+            {{currentUser.last_name}}
+          </h2>
+          <!-- ACTIVE ROUTE -->
+          <div v-if="activeRoutes == true" class="active-route-wrapper">
+            <span>
+              <h3 style="color:#4bb544;">Active Route</h3>
+              <h4>Start - {{activeRoute.from_location}}</h4>
+              <h4>Start Mileage - {{activeRoute.start_mileage}} mi</h4>
+            </span>
+            
+            <button v-on:click="goToFinishRoute" class="finish-button">END</button>
+          </div>
+          <button
+            class="input-button"
+            :disabled="activeRoutes"
+            v-on:click="changePageDisplay('newRoute'), clearStartingRouteInputs()"
+          >
+            New Route
+          </button>
+          <button
+            class="input-button"
+			v-on:click="changePageDisplay('allRoutes'), getRoutes(), filterBy = '' "
+          >
+            My Routes
+          </button>
+          <!-- ANCHOR -->
+          <button v-on:click="logOut" class="logout-button">logout<i class="icofont-logout icofont-1x"></i></button>
+        </div>
+        <!--! My Routes *DISPLAY ALL ROUTES* -->
+        <div v-if="page=='allRoutes'">
+          <span class="display-flex-space-between">
+            <button class="back-button" v-on:click="changePageDisplay('driverLanding')">back</button>
+            <h1 class="large-text-h1">MY ROUTES</h1>
+          </span>
+          <div class="search-group">
+            <button class="search-group-button" v-on:click="filterBy='Month', filterByDate">30 Days</button>
+            <button class="search-group-button" v-on:click="filterBy='Week', filterByDate">7 Days </button>
+            <button class="search-group-button" v-on:click="filterBy='Day', filterByDate">24 Hours</button>
+          </div>
+          
+          <div class="search-group-by-date">
+            <input type = "date" v-model = "filterDateStart">
+            <input type = "date" v-model = "filterDateEnd">
+          </div>
+          <div class="display-flex-col-align-center">
+            <button class="search-button" v-on:click= "filterBy = 'custom', filterByDate">Search</button>
+            <button class="reset-search-button" v-on:click="filterBy=''">Reset Search</button>
+          </div>
+          <div class="all-routes-wrapper">
+            <ul>
+              <li v-show = "filterBy.length==0 " v-for="route in routes">
+                <span class="display-flex-space-between">
+                  <h3>{{route.from_location}}</h3> 
+                  <h3>{{route.start_mileage}} mi<br></h3>
+                </span>
+                <i class="icofont-arrow-down icofont-2x"></i>
+                <span class="display-flex-space-between">
+                  <h3>{{route.to_location}}</h3> 
+                  <h3> {{route.end_mileage}} mi<br></h3>
+                </span>
+                <h2 style="text-align: center; margin:10px;">Total Miles {{route.total_miles}}<br></h2>
+                <p style="text-align: right; color:#008cff;" >Finished - {{route.time_ago}}<br></p>
+              </li>
+            </ul>
+          
+          <div class="all-routes-wrapper" v-if="filterBy.length!=0">
+            <ul>
+              <li v-for="route in filteredRoutes">
+                <span class="display-flex-space-between">
+                  <h3>{{route.from_location}}</h3> 
+                  <h3>{{route.start_mileage}}<br></h3>
+                </span>
+                <i class="icofont-arrow-down icofont-2x"></i>
+                <span class="display-flex-space-between">
+                  <h3>{{route.to_location}}</h3> 
+                  <h3> {{route.end_mileage}}<br></h3>
+                </span>
+                <h2 style="text-align: center; margin:10px;">Total Miles {{route.total_miles}}<br></h2>
+                <p style="text-align: right; color:#008cff;" >Finished - {{route.time_ago}}<br></p>
+              </li>
+            </ul>
+            </div>
+          </div>
+        </div>
+        <!--! Start A new Route *New route form*-->
+        <div v-if="page=='newRoute'" >
+          <div class="form margin-left-right">
+            <span class="display-flex-space-between">
+              <button
+                class="cancel-button"
+                v-on:click="changePageDisplay('driverLanding')"
+              >
+                Cancel
+              </button>
+              <h1 class="form-title">New Route</h1>
+            </span>
+            <div
+              v-if="newStartRouteErrors.length > 0"
+              class="begin-route-errors-wrapper"
+            >
+              <ul>
+                <li v-for="error in newStartRouteErrors">{{error}}</li>
+              </ul>
+            </div>
+
+            <!-- START LOCATION INPUT FIELD-->
+            <div class="form-input-group">
+              <input
+                type="text"
+                class="form-input"
+                placeholder="Start Location"
+                v-model="new_from_location"
+                autofocus
+              />
+            </div>
+            <div class="form-input-group">
+              <input
+                type="text"
+                class="form-input"
+                placeholder="Start Mileage"
+                v-model="new_start_mileage"
+                autofocus
+              />
+            </div>
+            <button
+              class="form-button"
+              v-on:click="beginNewRoute"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+        <!--End A New Route -->
+        <div v-if="page=='endRoute'">
+          <div class="form margin-left-right">
+            <span class="form-menu-selection">
+              <button
+                class="cancel-button"
+                v-on:click="changePageDisplay('driverLanding')"
+              >
+                Cancel
+              </button>
+            </span>
+
+            <h1 class="form-title">End Route</h1>
+
+            <div
+              v-if="newEndRouteErrors.length > 0"
+              class="end-route-errors-wrapper"
+            >
+              <ul>
+                <li v-for="error in newEndRouteErrors">{{error}}</li>
+              </ul>
+            </div>
+
+            <!-- END LOCATION INPUT FIELD-->
+            <div class="form-input-group">
+              <input
+                type="text"
+                class="form-input"
+                placeholder="End Location"
+                v-model="new_to_location"
+                autofocus
+              />
+            </div>
+            <div class="form-input-group">
+              <input
+                type="text"
+                class="form-input"
+                placeholder="End Mileage"
+                v-model="new_end_mileage"
+                autofocus
+              />
+            </div>
+            <button
+              class="form-button"
+              v-on:click="finishNewRoute"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+        <!--! View past routes-->
+        <div v-if="page=='pastRoutes'"></div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="vue.js"></script>
+  </body>
+</html>
