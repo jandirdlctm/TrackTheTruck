@@ -1,6 +1,11 @@
 # trucker_mile_tracker
 for keeping track of mileage
 
+# To Run on Machine
+- Clone Project
+- Run command  "npm install"
+- Open Chrome to "http://localhost:8080/"
+
 ## init dependencies
 
 - npm
