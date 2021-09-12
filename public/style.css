@@ -440,11 +440,25 @@ ul {
 }
 
 .icofont-truck {
-  font-size: 3em;
+  font-size: 5em;
+  animation: truck 3s linear infinite;
+  color: black;
+}
+@keyframes truck {
+  100% {
+    transform: translateY(24px);
+  }
+  50% {
+    transform: translateY(16px);
+  }
+  0% {
+    transform: translateY(-1px);
+  }
 }
 
 .fa-road {
-  font-size: 2em;
+  font-size: 4.5em;
+  color: black;
 }
 
 /* media query at width of 700px */
