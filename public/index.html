@@ -66,6 +66,7 @@
                 type="text"
                 v-model="logInEmail"
                 class="form-input"
+                id="sign-in-email-input"
                 placeholder="Email"
                 autofocus
               />
@@ -78,13 +79,14 @@
                 type="password"
                 v-model="logInPassword"
                 class="form-input"
+                id="sign-in-password-input"
                 placeholder="Password"
               />
               <div class="form-input-error-message"></div>
             </div>
 
             <!--submit and links-->
-            <button type="submit" v-on:click="logInUser" class="form-button">
+            <button type="submit" v-on:click="logInUser" class="form-button" id="continue-btn"> 
               Continue
             </button>
             <p class="form-text">
@@ -131,6 +133,7 @@
                 type="text"
                 class="form-input"
                 placeholder="Email"
+                id="company-email-input"
                 autofocus
                 v-model="new_company_email"
               />
@@ -140,6 +143,7 @@
               <input
                 type="text"
                 class="form-input"
+                id="company-name-input"
                 placeholder="Company Name"
                 v-model="new_company_name"
               />
@@ -150,6 +154,7 @@
               <input
                 type="password"
                 class="form-input"
+                id="company-password-input"
                 placeholder="Password"
                 v-model="new_company_password"
               />
@@ -160,13 +165,14 @@
               <input
                 type="password"
                 class="form-input"
+                id="company-confirm-password-input"
                 placeholder="Confirm Password"
                 v-model="new_company_confirm_password"
               />
             </div>
 
             <!--submit and links-->
-            <button class="form-button" v-on:click="addNewUser">
+            <button class="form-button" id="sign-up-continue-btn" v-on:click="addNewUser">
               Continue
             </button>
             <p class="form-text">
