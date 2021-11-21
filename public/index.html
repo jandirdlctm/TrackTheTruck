@@ -398,7 +398,7 @@
             {{currentUser.last_name}}
           </h2>
           <!-- ACTIVE ROUTE -->
-          <div v-if="activeRoutes == true" class="active-route-wrapper">
+          <div v-if="activeRoutes == true" class="active-route-wrapper active-route-box">
             <span>
               <h3 style="color:#4bb544;">Active Route</h3>
               <h4>Start - {{activeRoute.from_location}}</h4>
@@ -507,6 +507,7 @@
               <input
                 type="text"
                 class="form-input"
+                id="start-location-input"
                 placeholder="Start Location"
                 v-model="new_from_location"
                 autofocus
@@ -516,6 +517,7 @@
               <input
                 type="text"
                 class="form-input"
+                id="start-mileage-input"
                 placeholder="Start Mileage"
                 v-model="new_start_mileage"
                 autofocus
@@ -557,6 +559,7 @@
               <input
                 type="text"
                 class="form-input"
+                id="end-location-input"
                 placeholder="End Location"
                 v-model="new_to_location"
                 autofocus
@@ -566,6 +569,7 @@
               <input
                 type="text"
                 class="form-input"
+                id="end-mileage-input"
                 placeholder="End Mileage"
                 v-model="new_end_mileage"
                 autofocus
