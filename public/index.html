@@ -198,6 +198,7 @@
           </button>
           <button
             class="input-button"
+            id="add-new-driver-btn"
             v-on:click="changePageDisplay('addDriver', type_role='user')"
           >
             Add New Driver
@@ -328,6 +329,7 @@
               <input
                 type="text"
                 class="form-input"
+                id="driver-email-input"
                 placeholder="Email"
                 v-model="email"
                 autofocus
@@ -338,6 +340,7 @@
               <input
                 type="text"
                 class="form-input"
+                id="driver-fname-input"
                 placeholder="First Name"
                 v-model="first_name"
               />
@@ -348,6 +351,7 @@
               <input
                 type="text"
                 class="form-input"
+                id="driver-lname-input"
                 placeholder="Last Name"
                 v-model="last_name"
               />
@@ -358,6 +362,7 @@
               <input
                 type="text"
                 class="form-input"
+                id="driver-password-input"
                 placeholder="password"
                 v-model="password"
               />
@@ -368,6 +373,7 @@
               <input
                 type="text"
                 class="form-input"
+                id="driver-confirm-password-input"
                 placeholder="confirm password"
                 v-model="confirm_password"
               />
