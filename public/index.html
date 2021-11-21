@@ -409,6 +409,7 @@
           </div>
           <button
             class="input-button"
+            id="add-route-btn"
             :disabled="activeRoutes"
             v-on:click="changePageDisplay('newRoute'), clearStartingRouteInputs()"
           >
@@ -416,6 +417,7 @@
           </button>
           <button
             class="input-button"
+            id="view-routes-btn"
 			v-on:click="changePageDisplay('allRoutes'), getRoutes(), filterBy = '' "
           >
             My Routes
